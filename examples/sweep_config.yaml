@@ -1,0 +1,23 @@
+description: Try different labelling methods, possibly over different validation sets
+method: grid
+metric:
+  goal: maximize
+  name: accuracy
+name: x_labelling_method
+parameters:
+  labelling_method:
+    distribution: categorical
+    values:
+    - fli
+    - fli_no_uncertainty
+    - freq_ana_eq_3.5
+    - freq_ana_eq_3.6
+    - birav
+  val_ds:
+    distribution: categorical
+    values:
+    - eps=0.021
+    - eps=0.022
+    - eps=0.023
+    - eps=0.024
+    - eps=0.025
