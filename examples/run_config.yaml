@@ -1,3 +1,1 @@
-wandb_group: x_labelling_method
-resampling_period: 4, 
-use_wandb: True
+install_fastai = False
