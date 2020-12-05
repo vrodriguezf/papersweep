@@ -1,1 +1,1 @@
-install_fastai = False
+install_deps: True

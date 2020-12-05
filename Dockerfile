@@ -13,7 +13,7 @@ RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID $USER
 ###
 
 # PyPi
-RUN pip install --upgrade nbdev papermill wandb
+RUN pip install --upgrade nbdev papermill wandb fastcore numpy
 
 # Environmental variables for wandb
 ENV LC_ALL=C.UTF-8

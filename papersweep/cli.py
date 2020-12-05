@@ -20,11 +20,10 @@ def papersweep_exec(input_nb:Param("Input notebook", str),
         sc = yaml.safe_load(f)
     if pm_params:
         with maybe_open(pm_params, 'r') as f:
-            rc = yaml.safe_load(f)
+            _pm_params = yaml.safe_load(f)
     sid = wandb.sweep(sweep=sc, entity=entity, project=project) if not sweep_id else sweep_id
     sweep_agent = wandb.agent(sid,
                               function=partial(pm.execute_notebook,
                                                input_path=input_nb,
                                                output_path='__.ipynb',
-                                               parameters=pm_params))
-    return sweep_agent
+                                               parameters=_pm_params))

@@ -1,5 +1,5 @@
 name: tsai_architectures
-description: Try different architectures
+description: Try different architectures and datasets
 method: grid
 metric:
   goal: maximize
@@ -8,10 +8,14 @@ parameters:
   arch:
     distribution: categorical
     values:
-        - OmniScaleCNN
         - ResNet
         - LSTM_FCN
-        - XceptionTime
-        - ResCNN
         - InceptionTime
-        - xresnet1d34
+        - TST
+  dsid:
+      distribution: categorical
+      values:
+          - NATOPS
+          - GunPoint
+          - OliveOil
+    
