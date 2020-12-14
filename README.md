@@ -29,9 +29,8 @@ will use the default value `3` in case the notebook is executed as a standalone 
 ## How to use
 
 `--help` provides command help:
-
 ```
-papersweep --help
+$ papersweep --help
 usage: papersweep [-h] [--pm_params PM_PARAMS] [--sweep_id SWEEP_ID] [--pdb] [--xtra XTRA] input_nb sweep_config entity project
 
 positional arguments:
@@ -48,7 +47,6 @@ optional arguments:
   --pdb                 Run in pdb debugger (default: False)
   --xtra XTRA           Parse for additional args (default: '')
 ```
-
 `input_nb` contains a path to the notebook with the experiment you want to use as function of the sweep.
 
 `sweep_config` is a path to a YAML file with the configuration of the sweep. An example is given in `examples/sweep_config.yaml`. More information aboyt sweep configurations in the [official docs](https://docs.wandb.com/sweeps/configuration).
@@ -68,5 +66,3 @@ Running the following commandin a terminal:
 `papersweep --input_nb ./_example_tsai.ipynb --sweep_config ./examples/sweep_config.yaml ---entity vrodriguezf --project papersweep`
 
 will run the notebook `./example_tsai.ipynb` once for every iteration of the sweep, and log the results [in a dashboard](https://wandb.ai/vrodriguezf/papersweep/sweeps/qh09r37b?workspace=user-vrodriguezf) that you can interact and play with.
-
-![image.png](attachment:c1a3b65e-5df0-42ec-8523-8a5fa4cf4e1f.png)

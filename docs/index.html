@@ -1,13 +1,13 @@
 ---
 
-title: Project name here
+title: Papersweep
 
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Summary description here."
-description: "Summary description here."
+summary: "Combining papermill and wandb sweeps for frictionless experiments with notebooks."
+description: "Combining papermill and wandb sweeps for frictionless experiments with notebooks."
 nb_path: "index.ipynb"
 ---
 <!--
@@ -31,7 +31,58 @@ nb_path: "index.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This file will become your README and also the index of your documentation.</p>
+<p>I often find myself coding a machine learning experiment in a Jupyter Notebook, using <a href="https://www.wandb.com/">wandb</a> to visualize and track the results of the runs. When the experiment is drafted, I always have questions such as: How will the performance be affected by the parameter <code>a</code>? What if I change the number of items of the dataset, or change the dataset completely?</p>
+<p><a href="https://docs.wandb.com/sweeps">wandb sweeps</a> are a great tool to solve these questions. However, sweeping requires that you define a specific training function for the sweep, which I find redundant, specially when the code for training is already in the Jupyter Notebook. Furthermore, if I make some changes in the original notebook, I have to be sure that I change the sweep function too.</p>
+<p>This library just provides a single command, <code>papersweep</code>, which uses the library <a href="https://github.com/nteract/papermill">papermill</a> to execute a notebook as the function of a wandb sweep. The only thing that has to be changed in the notebook is the way the config parameters are declared in <code>wandb.config</code>.</p>
+<p>As an example, if <code>a</code> is a parameter in your notebook declared as:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wandb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Just changing that line to:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wandb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">ifnone</span><span class="p">(</span><span class="n">wandb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>will use the default value <code>3</code> in case the notebook is executed as a standalone run (i.e, without a sweep), and in case the notebook is executed as a sweep function, it will use the value injected from the sweep configuration. This provides a frictionless way of using your Jupyter Notebooks both for single runs and sweep functions.</p>
 
 </div>
 </div>
@@ -44,7 +95,7 @@ nb_path: "index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>pip install your_project_name</code></p>
+<p><code>pip install papersweep</code></p>
 
 </div>
 </div>
@@ -57,44 +108,67 @@ nb_path: "index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Fill me in please! Don't forget code examples:</p>
+<p><code>--help</code> provides command help:</p>
+
+</div>
+</div>
+</div>```
+$ papersweep --help
+usage: papersweep [-h] [--pm_params PM_PARAMS] [--sweep_id SWEEP_ID] [--pdb] [--xtra XTRA] input_nb sweep_config entity project
+
+positional arguments:
+  input_nb              Input notebook
+  sweep_config          YAML file with the sweep config
+  entity                wandb entity
+  project               wandb project
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --pm_params PM_PARAMS
+                        YAML file with papermill parameters
+  --sweep_id SWEEP_ID   Sweep ID. This option omits `sweep_config`
+  --pdb                 Run in pdb debugger (default: False)
+  --xtra XTRA           Parse for additional args (default: '')
+```
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>input_nb</code> contains a path to the notebook with the experiment you want to use as function of the sweep.</p>
+<p><code>sweep_config</code> is a path to a YAML file with the configuration of the sweep. An example is given in <code>examples/sweep_config.yaml</code>. More information aboyt sweep configurations in the <a href="https://docs.wandb.com/sweeps/configuration">official docs</a>.</p>
+<p><code>pm_params</code> is a YAML file with extra configuration for the notebook execution aside from the sweep parameters. Those parameters will be injected in the notebook by <code>papermill</code>, so they need to be placed in one cell tagged as <code>parameters</code> (See the documentation of <code>papermill</code> to see how to tag a cell in a Jupyter Notebook).</p>
+<p><code>sweep_id</code> allows to reuse an already existing sweep instead of creating a new one.</p>
 
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span>
-</pre></div>
-
-    </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Example-with-time-series-classification">Example with time series classification<a class="anchor-link" href="#Example-with-time-series-classification"> </a></h2>
 </div>
 </div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>2</pre>
 </div>
-
-</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The notebook <code>_example_tsai.ipynb</code> trains a time series classifier using deep learning with the library <code>tsai</code>(<a href="https://github.com/timeseriesAI/tsai">https://github.com/timeseriesAI/tsai</a>). The dataset (<code>dsid</code>) and the deep learning architecture (<code>arch</code>) are part of the <code>wandb.config</code> configuration parameters.</p>
+<p>The file <code>examples/sweep_config.yaml</code> gives grid-like experiment in which multiple datasets and architectures are tried, looking for the combination that achieves better accuracy</p>
+<p>Running the following commandin a terminal:</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>papersweep --input_nb ./_example_tsai.ipynb --sweep_config ./examples/sweep_config.yaml ---entity vrodriguezf --project papersweep</code></p>
 
 </div>
-    {% endraw %}
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>will run the notebook <code>./example_tsai.ipynb</code> once for every iteration of the sweep, and log the results <a href="https://wandb.ai/vrodriguezf/papersweep/sweeps/qh09r37b?workspace=user-vrodriguezf">in a dashboard</a> that you can interact and play with.</p>
 
+</div>
+</div>
+</div>
 </div>
  
 
