@@ -25,6 +25,7 @@ will use the default value `3` in case the notebook is executed as a standalone 
 ## Install
 
 Released version: `pip install papersweep`
+
 Updated git version: `pip install git+https://github.com/vrodriguezf/papersweep.git`
 
 ## How to use
