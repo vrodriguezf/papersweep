@@ -63,6 +63,6 @@ The file `examples/sweep_config.yaml` gives grid-like experiment in which multip
 
 Running the following commandin a terminal:
 
-`papersweep --input_nb ./_example_tsai.ipynb --sweep_config ./examples/sweep_config.yaml ---entity vrodriguezf --project papersweep`
+`papersweep ./_example_tsai.ipynb ./examples/sweep_config.yaml vrodriguezf papersweep`
 
 will run the notebook `./example_tsai.ipynb` once for every iteration of the sweep, and log the results [in a dashboard](https://wandb.ai/vrodriguezf/papersweep/sweeps/qh09r37b?workspace=user-vrodriguezf) that you can interact and play with.
