@@ -11,19 +11,30 @@ import papermill as pm
 # Cell
 @call_parse
 def papersweep_exec(input_nb:Param("Input notebook", str),
-               sweep_config:Param("YAML file with the sweep config", str),
-               entity:Param("wandb entity", str),
-               project:Param("wandb project", str),
-               pm_params:Param("YAML file with papermill parameters", str)=None,
-               sweep_id:Param("Sweep ID. This option omits `sweep_config`", str)=None):
+                    sweep_config:Param("YAML file with the sweep config", str),
+                    entity:Param("wandb entity", str),
+                    project:Param("wandb project", str),
+                    pm_params:Param("YAML file with papermill parameters", str)=None,
+                    sweep_id:Param("Sweep ID. This option omits `sweep_config`", str)=None,
+                    login_key:Param("Login key for wandb", str)=None):
+    """
+        Executes the notebook `input_nb` with the sweep configuration given in
+        `sweep_config`. Optionally, in case the notebook has one cell tagged as
+        'parameters', those will be injected from the file `pm_params`.
+    """
+    if login_key:
+        wandb.login(key=login_key)
     with maybe_open(sweep_config, 'r') as f:
         sc = yaml.safe_load(f)
     if pm_params:
         with maybe_open(pm_params, 'r') as f:
             _pm_params = yaml.safe_load(f)
+    else:
+        _pm_params = None
     sid = wandb.sweep(sweep=sc, entity=entity, project=project) if not sweep_id else sweep_id
     sweep_agent = wandb.agent(sid,
                               function=partial(pm.execute_notebook,
                                                input_path=input_nb,
                                                output_path='__.ipynb',
                                                parameters=_pm_params))
+    return sid
